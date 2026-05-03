@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/quic-go/go-ossfuzz-seeds"
+	ossfuzzseeds "github.com/quic-go/go-ossfuzz-seeds"
 
 	"github.com/AdamKorcz/go-118-fuzz-build/input"
 )
