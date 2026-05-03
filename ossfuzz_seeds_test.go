@@ -70,7 +70,7 @@ func assertCorpusFiles(t *testing.T, corpusDir string, seeds [][]any) {
 
 	want := make(map[string]struct{}, len(seeds))
 	for _, seed := range seeds {
-		entry, err := ossfuzzseeds.OSSFuzzCorpusEntry(seed...)
+		entry, err := ossfuzzseeds.CorpusEntry(seed...)
 		require.NoError(t, err)
 		want[string(entry)] = struct{}{}
 	}

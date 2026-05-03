@@ -16,7 +16,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestOSSFuzzCorpusEntryRoundTripWithNativeGoV2(t *testing.T) {
+func TestCorpusEntryRoundTripWithNativeGoV2(t *testing.T) {
 	cases := []struct {
 		name string
 		args []any
@@ -47,7 +47,7 @@ func TestOSSFuzzCorpusEntryRoundTripWithNativeGoV2(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			entry, err := ossfuzzseeds.OSSFuzzCorpusEntry(tc.args...)
+			entry, err := ossfuzzseeds.CorpusEntry(tc.args...)
 			require.NoError(t, err)
 
 			got := consumeWithOSSFuzzNativeGoV2(t, entry, tc.args)
@@ -56,7 +56,7 @@ func TestOSSFuzzCorpusEntryRoundTripWithNativeGoV2(t *testing.T) {
 	}
 }
 
-func TestOSSFuzzCorpusEntryRandomizedRoundTripWithNativeGoV2(t *testing.T) {
+func TestCorpusEntryRandomizedRoundTripWithNativeGoV2(t *testing.T) {
 	for i := range 1000 {
 		var seed [32]byte
 		_, err := rand.Read(seed[:])
@@ -114,7 +114,7 @@ func TestOSSFuzzCorpusEntryRandomizedRoundTripWithNativeGoV2(t *testing.T) {
 			}
 			t.Logf("types: %v", types)
 
-			entry, err := ossfuzzseeds.OSSFuzzCorpusEntry(args...)
+			entry, err := ossfuzzseeds.CorpusEntry(args...)
 			if errors.Is(err, ossfuzzseeds.ErrUnencodableDynamicCorpusArgs) {
 				t.Skip(err)
 			}
