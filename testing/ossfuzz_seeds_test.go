@@ -12,6 +12,8 @@ import (
 	ossfuzzseeds "github.com/quic-go/go-ossfuzz-seeds"
 
 	"github.com/AdamKorcz/go-118-fuzz-build/input"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestOSSFuzzCorpusEntryRoundTripWithNativeGoV2(t *testing.T) {
@@ -46,14 +48,10 @@ func TestOSSFuzzCorpusEntryRoundTripWithNativeGoV2(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			entry, err := ossfuzzseeds.OSSFuzzCorpusEntry(tc.args...)
-			if err != nil {
-				t.Fatal(err)
-			}
+			require.NoError(t, err)
 
 			got := consumeWithOSSFuzzNativeGoV2(t, entry, tc.args)
-			if !reflect.DeepEqual(got, tc.args) {
-				t.Fatalf("expected %#v, got %#v", tc.args, got)
-			}
+			require.Equal(t, tc.args, got)
 		})
 	}
 }
@@ -61,9 +59,8 @@ func TestOSSFuzzCorpusEntryRoundTripWithNativeGoV2(t *testing.T) {
 func TestOSSFuzzCorpusEntryRandomizedRoundTripWithNativeGoV2(t *testing.T) {
 	for i := range 1000 {
 		var seed [32]byte
-		if _, err := rand.Read(seed[:]); err != nil {
-			t.Fatal(err)
-		}
+		_, err := rand.Read(seed[:])
+		require.NoError(t, err)
 
 		t.Run(fmt.Sprintf("run %d", i+1), func(t *testing.T) {
 			t.Logf("seed: %x", seed)
@@ -121,14 +118,10 @@ func TestOSSFuzzCorpusEntryRandomizedRoundTripWithNativeGoV2(t *testing.T) {
 			if errors.Is(err, ossfuzzseeds.ErrUnencodableDynamicCorpusArgs) {
 				t.Skip(err)
 			}
-			if err != nil {
-				t.Fatalf("args %#v: %v", args, err)
-			}
+			require.NoError(t, err, "args %#v", args)
 
 			got := consumeWithOSSFuzzNativeGoV2(t, entry, args)
-			if !reflect.DeepEqual(got, args) {
-				t.Fatalf("expected %#v, got %#v", args, got)
-			}
+			require.Equal(t, args, got)
 		})
 	}
 }
