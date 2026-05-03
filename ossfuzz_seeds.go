@@ -57,7 +57,7 @@ func (h *Helper) Add(args ...any) {
 
 // writeCorpusEntry writes the arguments using the raw OSS-Fuzz corpus format.
 func (h *Helper) writeCorpusEntry(args ...any) {
-	entry, err := OSSFuzzCorpusEntry(args...)
+	entry, err := CorpusEntry(args...)
 	if err != nil {
 		h.Errorf("failed to encode corpus entry: %v", err)
 		return
@@ -73,8 +73,12 @@ func (h *Helper) writeCorpusEntry(args ...any) {
 	}
 }
 
-// OSSFuzzCorpusEntry encodes f.Add arguments as a raw OSS-Fuzz corpus entry.
-func OSSFuzzCorpusEntry(args ...any) ([]byte, error) {
+// CorpusEntry encodes one set of testing.F.Add arguments as a raw OSS-Fuzz
+// seed corpus entry.
+//
+// This is the lower-level encoder used by Helper.Add when FUZZ_CORPUS_DIR is
+// set. Most fuzz targets should use New(f).Add(...) instead.
+func CorpusEntry(args ...any) ([]byte, error) {
 	var fixed []byte
 	var dynamic [][]byte
 	for _, arg := range args {
