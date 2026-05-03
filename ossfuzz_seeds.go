@@ -1,4 +1,5 @@
-package fuzzhelper
+// Package ossfuzzseeds writes Go native fuzz seeds as OSS-Fuzz seed corpus files.
+package ossfuzzseeds
 
 import (
 	"crypto/sha256"
@@ -16,22 +17,22 @@ import (
 // weight format can't exactly represent the requested dynamic argument lengths.
 var ErrUnencodableDynamicCorpusArgs = errors.New("dynamic corpus arguments can't be encoded for OSS-Fuzz")
 
-// FuzzHelper wraps *testing.F.
+// Helper wraps *testing.F.
 // When FUZZ_CORPUS_DIR is set to a non-empty path, Add() writes corpus entries
 // in the raw format OSS-Fuzz expects.
-type FuzzHelper struct {
+type Helper struct {
 	*testing.F
 	corpusDir string
 	enabled   bool
 }
 
-// NewFuzzHelper creates a new helper.
+// New creates a helper.
 // If FUZZ_CORPUS_DIR is set, corpus files will be written to that directory.
-func NewFuzzHelper(f *testing.F) *FuzzHelper {
+func New(f *testing.F) *Helper {
 	dir := os.Getenv("FUZZ_CORPUS_DIR")
 	enabled := dir != ""
 
-	h := &FuzzHelper{
+	h := &Helper{
 		F:         f,
 		corpusDir: dir,
 		enabled:   enabled,
@@ -46,7 +47,7 @@ func NewFuzzHelper(f *testing.F) *FuzzHelper {
 }
 
 // Add calls the real Add and, if enabled, also writes the corpus entry.
-func (h *FuzzHelper) Add(args ...any) {
+func (h *Helper) Add(args ...any) {
 	h.F.Add(args...)
 
 	if h.enabled {
@@ -55,7 +56,7 @@ func (h *FuzzHelper) Add(args ...any) {
 }
 
 // writeCorpusEntry writes the arguments using the raw OSS-Fuzz corpus format.
-func (h *FuzzHelper) writeCorpusEntry(args ...any) {
+func (h *Helper) writeCorpusEntry(args ...any) {
 	entry, err := OSSFuzzCorpusEntry(args...)
 	if err != nil {
 		h.Errorf("failed to encode corpus entry: %v", err)

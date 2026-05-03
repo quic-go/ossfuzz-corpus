@@ -1,4 +1,4 @@
-package fuzzhelper_test
+package ossfuzzseeds_test
 
 import (
 	"crypto/rand"
@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	fuzzhelper "github.com/quic-go/ossfuzz-corpus"
+	"github.com/quic-go/go-ossfuzz-seeds"
 
 	"github.com/AdamKorcz/go-118-fuzz-build/input"
 )
@@ -45,7 +45,7 @@ func TestOSSFuzzCorpusEntryRoundTripWithNativeGoV2(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			entry, err := fuzzhelper.OSSFuzzCorpusEntry(tc.args...)
+			entry, err := ossfuzzseeds.OSSFuzzCorpusEntry(tc.args...)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -117,8 +117,8 @@ func TestOSSFuzzCorpusEntryRandomizedRoundTripWithNativeGoV2(t *testing.T) {
 			}
 			t.Logf("types: %v", types)
 
-			entry, err := fuzzhelper.OSSFuzzCorpusEntry(args...)
-			if errors.Is(err, fuzzhelper.ErrUnencodableDynamicCorpusArgs) {
+			entry, err := ossfuzzseeds.OSSFuzzCorpusEntry(args...)
+			if errors.Is(err, ossfuzzseeds.ErrUnencodableDynamicCorpusArgs) {
 				t.Skip(err)
 			}
 			if err != nil {
