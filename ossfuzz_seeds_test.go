@@ -3,6 +3,7 @@ package ossfuzzseeds_test
 import (
 	"os"
 	"os/exec"
+	"path/filepath"
 	"testing"
 
 	ossfuzzseeds "github.com/quic-go/go-ossfuzz-seeds"
@@ -75,7 +76,7 @@ func assertCorpusFiles(t *testing.T, corpusDir string, seeds [][]any) {
 	}
 
 	for _, entry := range entries {
-		got, err := os.ReadFile(corpusDir + "/" + entry.Name())
+		got, err := os.ReadFile(filepath.Join(corpusDir, entry.Name()))
 		require.NoError(t, err, "reading corpus file %s", entry.Name())
 		require.Contains(t, want, string(got), "unexpected corpus file %s", entry.Name())
 		delete(want, string(got))
